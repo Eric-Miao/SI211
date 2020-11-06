@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{listings}
+\newcommand{\numpy}{{\tt numpy}}    % tt font for numpy
+
+\topmargin -.5in
+\textheight 9in
+\oddsidemargin -.25in
+\evensidemargin -.25in
+\textwidth 7in
+
+\begin{document}
+
+% ========== Edit your name here
+\author{Prof. Boris Houska}
+\date{
+Due on Step 30, 2020, 23:59}
+\title{SI 211: Numerical Analysis Homework 1 }
+\maketitle
+
+\medskip
+\begin{enumerate}
+
+% ========== Begin answering questions here
+\item  Floating point numbers. What is the bit representations of the floating point number 5.25 using the IEEE standard for double precision numbers? Solve this problem with pen and paper first. Use a computer program to verify your result.
+\item  Numerical evaluation error. Evaluate the function
+$$
+f(x)=\frac{1-\cos (x)}{x^{2}}
+$$
+with a compute program of your choice using the standard IEEE double precision floating point format. Plot the numerical result on a logarithmic scale for $x \in\left[10^{-15}, 10^{-1}\right]$.
+\item  Taylor expansion. Consider again the function
+$$
+f(x)=\frac{1-\cos (x)}{x^{2}}
+$$
+from the first homework problem. Can you approximate $f$ by using a Taylor approximation? Does this help you to evaluate $f$ with higher accuracy?
+\item  Numerical differentiation.
+Consider the five-point differentiation formula
+$$
+f^{\prime}(x) \approx \frac{1}{12 h}\left[-25 f\left(x_{0}\right)+48 f\left(x_{0}+h\right)-36 f\left(x_{0}+2 h\right)+16 f\left(x_{0}+3 h\right)-3 f\left(x_{0}+4 h\right)\right]
+$$
+\subitem (a) What is the mathematical approximation error of this formula?
+\subitem(b) For which values of $h$ would you expect that this formula leads to a minimum approximation error taking both the mathematical as well as the numerical approximation error into account?
+\subitem(c) Implement the above differentiation formula in a compute program of your choice and use it to find the derivative of the test function $f(x)=e^{x}$ at $x=1 .$ Plot the total derivative evaluation error as a function of $h$ and intepret your results.
+\end{enumerate}
+\end{document}
+\grid
