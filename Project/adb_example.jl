@@ -7,7 +7,7 @@
 
 # From a computer science perspective: (**NOT FOR REQUIREMENTS**)
 # 1. Global variables are troublesome
-# Solution: use shared pointers instead of global variables, [Maintain all variables locally, within the ADV data structure]
+# Solution: use shared pointers instead of global variables, [Maintain all variables locally, within the ADN data structure]
 # 2. Avoid redundant code:
 # => Outsource common code to a unary and binary operator. [Write generic operations / modules];
 # 3.a. Don't require the users to provide n(the order of input) ! [Write a counter instead]
@@ -19,131 +19,128 @@ NOP = 0;    # Number of operations
 FS = "";    # Forward Sweep
 BS = "";    # Backward Sweep
 
-mutable struct ADV
+mutable struct ADN
     i::Int16;
-    ADV(i)=new(i)
+    ADN(i)=new(i)
 end
 
-// ADV op. ADV
-function +(a::ADV, b::ADV)
+# ADN op. ADN
+function +(a::ADN, b::ADN)
     i = a.i;
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = v[$i]+v[$j]; \n";
     global BS = "  w[$i] += w[$NOP]; \n" * BS;
     global BS = "  w[$j] += w[$NOP]; \n" * BS;
-    return ADV(NOP);
+    return ADN(NOP);
 end
 
-function -(a::ADV, b::ADV)
+function -(a::ADN, b::ADN)
     i = a.i;
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = v[$i]-v[$j]; \n";
     global BS = "  w[$i] += w[$NOP]; \n" * BS;
     global BS = "  w[$j] += -w[$NOP]; \n" * BS;
-    return ADV(NOP);
+    return ADN(NOP);
 end
 
-function /(a::ADV, b::ADV)
+function /(a::ADN, b::ADN)
     i = a.i;
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = v[$i]/v[$j]; \n";
     global BS = " w[$i] += 1/v[$j]*w[$NOP]; \n" * BS;
     global BS = " w[$j] += v[$i]/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
-    return ADV(NOP);
+    return ADN(NOP);
 end
 
-function *(a::ADV, b::ADV)
+function *(a::ADN, b::ADN)
     i = a.i;
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = v[$i]*v[$j]; \n";
     global BS = "  w[$i] += v[$j]*w[$NOP]; \n" * BS;
     global BS = "  w[$j] += v[$i]*w[$NOP]; \n" * BS;
-    return ADV(NOP);
+    return ADN(NOP);
 end
 
-function sin(a::ADV)
+function sin(a::ADN)
     i = a.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = sin(v[$i]); \n";
     global BS = "  w[$i] += cos(v[$i]) * w[$NOP]; \n" * BS;
-    return ADV(NOP);
+    return ADN(NOP);
 end
 
-function cos(a::ADV)
+function cos(a::ADN)
     i=a.i
     global NOP=NOP + 1
     global FS = FS * "  v[$NOP] = cos(v[$i]); \n";
     global BS = "  w[$i] += -sin(v[$i]) * w[$NOP]; \n" * BS;
-    return ADV(NOP);
+    return ADN(NOP);
 end
 
 
-// Float64 op. ADV
-function +(a::Float64, b::ADV)
+# Float64 op. ADN
+function +(a::Float64, b::ADN)
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = $a+v[$j]; \n";
     global BS = "  w[$j] += w[$NOP]; \n" * BS;
-    return ADV(NOP);
+    return ADN(NOP);
 end
 
-function +(a::ADV, b::Float64)
+function +(a::ADN, b::Float64)
     return b+a;
 end
 
-function -(a::Float64, b::ADV)
+function -(a::Float64, b::ADN)
     return (-a)+b;
 end
 
-function -(a::ADV, b::Float64)
+function -(a::ADN, b::Float64)
     return a+(-b);
 end
 
-function /(a::Float64, b::ADV)
+function /(a::Float64, b::ADN)
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = $a/v[$j]; \n";
     global BS = " w[$j] += $a/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
-    return ADV(NOP)
+    return ADN(NOP)
 end
 
-function /(a::ADV, b::Float64)
+function /(a::ADN, b::Float64)
     i=a.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = v[$i]/$a; \n";
     global BS = "  w[$i] += w[$NOP]/$a; \n" * BS
-    return ADV(NOP)
+    return ADN(NOP)
 end
 
-function *(a::Float64, b::ADV)
+function *(a::Float64, b::ADN)
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = $a*v[$j]; \n";
     global BS = " w[$j] += $a*w[$NOP]; \n" * BS;
-    return ADV(NOP)
+    return ADN(NOP)
 end
 
-function *(a::ADV, b::Float64)
+function *(a::ADN, b::Float64)
     return b*a;
 end
 
 
 
 function ADbackward(f, n)
-    # f: R^n -> R^m
-    # should return:
-    # h(x, d) = d^T f'(x)
     global FS = "";
     global BS = "";
 
     xx = [];
     for i=1:n
         global FS = FS*"  v[$i] = x[$i]; \n";
-        xx = [xx; ADV(i)];
+        xx = [xx; ADN(i)];
     end
 
     global NOP = n;
@@ -175,10 +172,10 @@ function ADbackward(f, n)
     return h;
 end
 
-function f(x)
-    return [ x[1] * x[2]; x[1] + x[2]*x[2]];
-end
+#function f(x)
+ #   return [ x[1] * x[2]; x[1] + x[2]*x[2]];
+#end
 
 # main()
-h = ADbackward(f,2);
-print(h([1,1], [1,1])); #[2, 3]
+#h = ADbackward(minif,5);
+#print(h([1,1], [1,1])); #[2, 3]

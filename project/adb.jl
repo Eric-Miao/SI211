@@ -107,7 +107,7 @@ end
 # 
 function ADbackward(f)
     function g(x)
-        #print("into g(x),x is ",x," \n")
+        print("into g(x),x is ",x," \n")
         X=Array{ADNode}
         X=[ADNode(true,each,0.0,[0.0],[]) for each in x]
         Y=f(X)
@@ -129,7 +129,7 @@ function ADbackward(f)
             end
             while length(path) != 0
                 #print("\nright now the path is\n",path,"\n")
-                #print("\nright now, cur is \n",cur,"\n")
+                print("\nright now, cur is \n",cur,"\n")
                 for j=1:length(cur.parent)
                     cur.parent[j].dval += cur.dval*cur.grad[j]
                 end
@@ -143,6 +143,7 @@ function ADbackward(f)
             end
             #print(X,"\n\n")
             temp_ans=[a.dval for a in X]
+            print(temp_ans,"\n")
             #ret=[ret temp_ans]
             append!(ret,temp_ans)
             if i != length(Y)
