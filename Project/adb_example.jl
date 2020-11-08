@@ -50,8 +50,8 @@ function /(a::ADN, b::ADN)
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = v[$i]/v[$j]; \n";
-    global BS = " w[$i] += 1/v[$j]*w[$NOP]; \n" * BS;
-    global BS = " w[$j] += v[$i]/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
+    global BS = "  w[$i] += 1/v[$j]*w[$NOP]; \n" * BS;
+    global BS = "  w[$j] += v[$i]/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
     return ADN(NOP);
 end
 
@@ -107,7 +107,7 @@ function /(a::Float64, b::ADN)
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = $a/v[$j]; \n";
-    global BS = " w[$j] += $a/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
+    global BS = "  w[$j] += $a/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
     return ADN(NOP)
 end
 
@@ -123,7 +123,7 @@ function *(a::Float64, b::ADN)
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = $a*v[$j]; \n";
-    global BS = " w[$j] += $a*w[$NOP]; \n" * BS;
+    global BS = "  w[$j] += $a*w[$NOP]; \n" * BS;
     return ADN(NOP)
 end
 
@@ -148,9 +148,10 @@ function ADbackward(f, n)
     yy = f(xx);
     m = length(yy);
     program = "function h(x, d) \n";
-    program *= "v = zeros($NOP); \n";
-    program *= "w = zeros($NOP); \n";
-    program *= "y = zeros($m); \n";
+    program *= "  v = zeros($NOP); \n";
+    program *= "  w = zeros($NOP); \n";
+    program *= "  y = zeros($m); \n";
+    program *= "  ret = zeros($n); \n";
     program *= FS;
 
     for i=1:m
@@ -159,10 +160,14 @@ function ADbackward(f, n)
     end
 
     program *= BS;
-    for i=1:m
-        program *= "  y[$i] = w[$i]; \n";
+    #for i=1:m
+    #    program *= "  y[$i] = w[$i]; \n";
+    #end
+
+    for i=1:n
+        program *= "  ret[$i] = w[$i]; \n"
     end
-    program *= "  return y; \n";
+    program *= "  return ret; \n";
     program *= "end \n";
 
     # Uncomment this to check
