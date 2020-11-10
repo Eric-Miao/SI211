@@ -12,6 +12,7 @@ function FiniteDiff(f,x)
             diff = (f(xx)[i]-yy[i])/eps
             append!(temp,diff)
         end
-        println(temp)
+        append!(ret,temp)
     end
+    return ret
 end
