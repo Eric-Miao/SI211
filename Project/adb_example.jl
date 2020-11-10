@@ -51,7 +51,7 @@ function /(a::ADN, b::ADN)
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = v[$i]/v[$j]; \n";
     global BS = "  w[$i] += 1/v[$j]*w[$NOP]; \n" * BS;
-    global BS = "  w[$j] += v[$i]/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
+    global BS = "  w[$j] += -1*v[$i]/(v[$j]^2)*w[$NOP]; \n" * BS;
     return ADN(NOP);
 end
 
@@ -107,15 +107,15 @@ function /(a::Float64, b::ADN)
     j = b.i;
     global NOP = NOP + 1;
     global FS = FS * "  v[$NOP] = $a/v[$j]; \n";
-    global BS = "  w[$j] += $a/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
+    global BS = "  w[$j] += -1*$a/(v[$j]*v[$j])*w[$NOP]; \n" * BS;
     return ADN(NOP)
 end
 
 function /(a::ADN, b::Float64)
     i=a.i;
     global NOP = NOP + 1;
-    global FS = FS * "  v[$NOP] = v[$i]/$a; \n";
-    global BS = "  w[$i] += w[$NOP]/$a; \n" * BS
+    global FS = FS * "  v[$NOP] = v[$i]/$b; \n";
+    global BS = "  w[$i] += w[$NOP]/$b; \n" * BS
     return ADN(NOP)
 end
 
@@ -136,7 +136,7 @@ end
 function ADbackward(f, n)
     global FS = "";
     global BS = "";
-
+    
     xx = [];
     for i=1:n
         global FS = FS*"  v[$i] = x[$i]; \n";
