@@ -8,7 +8,7 @@ function forwardloop(f,n)
     for i=1:n
         d=zeros(n)
         d[i]=1.0
-        #println(f(x,d))
+        (f(x,d))
     end
 end
 
@@ -17,7 +17,7 @@ function backwardloop(f,m,n)
     for i=1:m
         d=zeros(m)
         d[i]=1.0
-        #rintln(f(x,d))
+        (f(x,d))
     end
 end
 
