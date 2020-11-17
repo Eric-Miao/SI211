@@ -1,3 +1,5 @@
+Using Plot
+
 include("adf.jl")
 include("adb.jl")
 include("fd.jl")
@@ -59,3 +61,5 @@ function answer(n=2020)
     end
     
 end
+
+function plot_result(n=2020)
