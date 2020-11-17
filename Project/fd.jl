@@ -14,5 +14,5 @@ function FiniteDiff(f,x)
         end
         append!(ret,temp)
     end
-    #return ret
+    return ret
 end
