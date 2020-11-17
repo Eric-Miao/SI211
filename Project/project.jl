@@ -32,7 +32,7 @@ function time(n)
     @time FiniteDiff(f,ones(n))
 end
 
-function check(n)
+function value(n)
     forwardloop(adf,n)
     backwardloop(adb,2,n)
     FiniteDiff(f,ones(n))
