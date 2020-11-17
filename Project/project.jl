@@ -5,6 +5,12 @@ include("adb.jl")
 include("fd.jl")
 include("f.jl")
 
+import Base.abs
+
+function abs(arr::Array{Float64,1})
+    return [abs(a) for a in arr]
+end
+
 function forwardloop(f,n)
     x=ones(n)
     ret=[]
@@ -64,12 +70,17 @@ end
 
 function plot_result(n=2020)
     ret_adf=forwardloop(adf,n)
-    ret_adb=backwardloop(adb,2,n)
-    ret_fd=FiniteDiff(f,ones(n))
+    adf_1 = [ret_adf[i][1] for i=1:length(ret_adf)]
 
-    diff_adf_fd = abs(ret_adf - ret_fd)
-    diff_adb_fd = abs(ret_adb - ret_fd)
-    x=ones(2*n)
+    ret_adb=backwardloop(adb,2,n)
+    adb_1=ret_adb[1]
+
+    ret_fd=FiniteDiff(f,ones(n))
+    fd_1=ret_fd[1]
+
+    diff_adf_fd = abs(adf_1 - fd_1)
+    diff_adb_fd = abs(adb_1 - fd_1)
+    x=ones(n)
 
     plot1 = plot(x,diff_adf_fd,label="difference of ADforward")
     plot!(plot1,diff_adb_fd,label="difference of ADbackward")
