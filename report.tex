@@ -1,0 +1,22 @@
+\subsubsection{Data Structure}
+As discussed in lecture, there are two processes in backward mode: forward sweep and backward sweep and therefore in Boris' code, there are two
+huge global strings: $BS$ and $FS$. However, in my design, the $BS$, $FS$ are two global arrays, which also
+stores the calculation steps in both direction using the $ADV$ structure, which will be discussed below.
+
+In Boris's code, there is this $ADV$ structure which represent abstract node in the calculation graph, only as an index
+indicator. However, in my design, this structure has 5 field.
+\begin{enumerate}
+    \item $id$: This act as the $i$ in Boris's code as the index indicator
+    \item $op$: By what operator is this node generated from operands. 0 to 5 represents +, -, *, /, sin, cos
+    respectively and -1 for root nodes (raw input $x$).
+    \item $a$: The id of the first parent operand back when the node is generated, -1 for root nodes.
+    \item $b$: The id of the second parent operand back when the node id generated, -1 for root nodes.
+    \item $val$: The real numerical value of this node in the forward sweep of calculation.
+    \item[*] Note: for single operand operators such as sin, cos and +,-,* when calculating normal numbers and $ADV$,
+    $a$ is the field that represents the only $ADV$ parent and $b=-1$.
+    \item[**] Note: for operator /, since the position of the only $ADV$ does matter when calculating the derivatives
+    in the condition that operands have both number and $ADV$, the corresponding
+\end{enumerate}
+
+\subsubsection{Operator Reloading}
+\subsubsection{Main ADbackward Function}
