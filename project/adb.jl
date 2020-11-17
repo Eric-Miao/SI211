@@ -278,9 +278,3 @@ function ADbackward(f)
     end
     return g;
 end
-
-#function f(x)
-#    return [x[1] * x[2]+2.0; 5.0*x[1] / x[2]*x[2]/2.0;sin(x[1]);cos(x[2])*x[1]];
-#end
-#g = ADbackward(f);
-#print(g([1,1], [1,1,1,1]));
