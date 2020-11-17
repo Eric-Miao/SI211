@@ -1,4 +1,4 @@
-Using Plot
+using Plots
 
 include("adf.jl")
 include("adb.jl")
@@ -63,3 +63,14 @@ function answer(n=2020)
 end
 
 function plot_result(n=2020)
+    ret_adf=forwardloop(adf,n)
+    ret_adb=backwardloop(adb,2,n)
+    ret_fd=FiniteDiff(f,ones(n))
+
+    diff_adf_fd = abs(ret_adf - ret_fd)
+    diff_adb_fd = abs(ret_adb - ret_fd)
+    x=ones(2*n)
+
+    plot1 = plot(x,diff_adf_fd,label="difference of ADforward")
+    plot!(plot1,diff_adb_fd,label="difference of ADbackward")
+end
