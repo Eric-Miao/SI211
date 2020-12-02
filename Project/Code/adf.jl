@@ -142,13 +142,13 @@ function ADforward(f)
         if length(Y) == 1
             Y=[Y]
         end
-        #print(Y)
-        ret=[]
-        for y in Y 
+        ret=Array{Float64}(undef,length(Y))
+        for i = 1:length(Y)
+            y=Y[i]
             if typeof(y)==ADV
-                append!(ret,y.b)
+                ret[i]=y.b
             else
-                append!(ret,0.0)
+                ret[i]=0.0
             end
         end
 		return ret
@@ -156,3 +156,19 @@ function ADforward(f)
 	return g
 end
 		
+function Jacobian(f)
+    adf=ADforward(f)
+    function forwardloop(x)
+        n=length(x)
+        m=length(f(x))
+        ret=[]
+        for i=1:n
+            d=zeros(n)
+            d[i]=1.0
+            append!(ret,adf(x,d))
+        end
+        return reshape(ret,m,n)
+    end
+    return forwardloop
+end
+
